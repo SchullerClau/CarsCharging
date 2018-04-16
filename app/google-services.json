@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "739844986997",
+    "firebase_url": "https://carschargerapp.firebaseio.com",
+    "project_id": "carschargerapp",
+    "storage_bucket": "carschargerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739844986997:android:b03f3441eaa55faa",
+        "android_client_info": {
+          "package_name": "com.example.schuller.carscharging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739844986997-fe3uuhj4fdmv0ojt3847vdrljgtjhcqr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.schuller.carscharging",
+            "certificate_hash": "521fdbc95414bfda4501c8c8db207e936eacd7fc"
+          }
+        },
+        {
+          "client_id": "739844986997-537e9974le0jjd2uirlk4sdfevssncpc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9ot06DORQPE5gb2Smkpw6ptpL1U9L-Bg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739844986997-537e9974le0jjd2uirlk4sdfevssncpc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
