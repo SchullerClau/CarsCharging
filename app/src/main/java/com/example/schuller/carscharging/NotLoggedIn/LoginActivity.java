@@ -1,4 +1,4 @@
-package com.example.schuller.carscharging.login;
+package com.example.schuller.carscharging.NotLoggedIn;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.schuller.carscharging.DriverMapActivity;
-import com.example.schuller.carscharging.MainActivity;
+import com.example.schuller.carscharging.Drivers.DriverMapActivity;
 import com.example.schuller.carscharging.R;
-import com.example.schuller.carscharging.create_account.CreateAccountActivity;
-import com.example.schuller.carscharging.model.Driver;
+import com.example.schuller.carscharging.zModel.Driver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -70,26 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
                 return;
             }
-//                final String email = mEmail.getText().toString();
-//                final String password = mPassword.getText().toString();
-//
-//                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d("TAG", "createUserWithEmail:success");
-//                            writeNewDriver(email, password);
-//                            Toast.makeText(LoginActivity.this, "Connection Successful", Toast.LENGTH_SHORT).show();
-//
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                });
         });
 
         mLogin.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void writeNewDriver(String email, String password) {
         Driver user = new Driver(email, password);
-        mDatabase.child("Users").child("Drivers").setValue(user);
+        mDatabase.child("Users").child("com/example/schuller/carscharging/Drivers").setValue(user);
     }
 }

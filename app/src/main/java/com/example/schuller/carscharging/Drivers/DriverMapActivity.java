@@ -1,4 +1,4 @@
-package com.example.schuller.carscharging;
+package com.example.schuller.carscharging.Drivers;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.example.schuller.carscharging.R;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;

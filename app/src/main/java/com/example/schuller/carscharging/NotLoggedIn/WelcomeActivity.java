@@ -1,4 +1,4 @@
-package com.example.schuller.carscharging.welcome;
+package com.example.schuller.carscharging.NotLoggedIn;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.schuller.carscharging.R;
-import com.example.schuller.carscharging.login.LoginActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 

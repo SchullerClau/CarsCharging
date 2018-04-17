@@ -1,4 +1,4 @@
-package com.example.schuller.carscharging.model;
+package com.example.schuller.carscharging.zModel;
 
 /**
  * Model
