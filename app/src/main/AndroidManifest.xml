@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity" />
+        <activity android:name=".create_account.CreateAccountActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

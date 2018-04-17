@@ -11,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schuller.carscharging.DriverMapActivity;
+import com.example.schuller.carscharging.MainActivity;
 import com.example.schuller.carscharging.R;
+import com.example.schuller.carscharging.create_account.CreateAccountActivity;
 import com.example.schuller.carscharging.model.Driver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
                     startActivity(intent);
                     finish();
+                    return;
                 }
             }
         };
@@ -61,8 +64,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
 //                final String email = mEmail.getText().toString();
 //                final String password = mPassword.getText().toString();
 //
@@ -83,8 +90,6 @@ public class LoginActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
-
-            }
         });
 
         mLogin.setOnClickListener(new View.OnClickListener() {
