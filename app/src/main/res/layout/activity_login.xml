@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="64dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:inputType="textNoSuggestions"
         android:hint="Email" />
 
     <EditText
@@ -20,7 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:hint="Password" />
+        android:backgroundTint="@color/colorPrimary"
+        android:inputType="textNoSuggestions"
+        android:hint="Password"
+        android:password="true" />
 
     <Button
         android:id="@+id/login"
@@ -28,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
+        android:background="@color/colorPrimary"
         android:text="Login" />
 
     <TextView

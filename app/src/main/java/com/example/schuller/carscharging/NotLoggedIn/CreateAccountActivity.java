@@ -2,19 +2,45 @@ package com.example.schuller.carscharging.NotLoggedIn;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.schuller.carscharging.R;
+import com.example.schuller.carscharging.zModel.Driver;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
+
 
 public class CreateAccountActivity extends AppCompatActivity {
+
+    private EditText mCreateName, mCreateEmail, mCreatePassword, mCreateCarID ;
+    private Button mCreateAccount;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-//                final String email = mEmail.getText().toString();
-//                final String password = mPassword.getText().toString();
-//
+        mCreateName = findViewById(R.id.createName);
+        mCreateEmail = findViewById(R.id.createEmail);
+        mCreatePassword = findViewById(R.id.createPassword);
+        mCreateCarID = findViewById(R.id.createCarID);
+        mCreateAccount = findViewById(R.id.createAccoutButton);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        final String name = mCreateName.getText().toString();
+        final String email = mCreateEmail.getText().toString();
+        final String password = mCreatePassword.getText().toString();
+        final String carId = mCreateCarID.getText().toString();
+
+
+
 //                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
 //                    @Override
 //                    public void onComplete(@NonNull Task<AuthResult> task) {
@@ -32,8 +58,10 @@ public class CreateAccountActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
+    }
 
-
-
+    private void writeNewDriver(String name, String email, String password, String carId) {
+        Driver driver = new Driver(name, email, password, carId);
+        mDatabase.child("Users").child("Drivers").setValue(driver);
     }
 }

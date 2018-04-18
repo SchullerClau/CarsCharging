@@ -27,8 +27,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button mLogin;
     private TextView mRegistration;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
-
 
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
@@ -39,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -98,10 +95,5 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(firebaseAuthListener);
-    }
-
-    private void writeNewDriver(String email, String password) {
-        Driver user = new Driver(email, password);
-        mDatabase.child("Users").child("com/example/schuller/carscharging/Drivers").setValue(user);
     }
 }
