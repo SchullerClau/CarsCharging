@@ -1,4 +1,4 @@
-package com.example.schuller.carscharging.model;
+package com.example.schuller.carscharging.zModel;
 
 /**
  * Model
@@ -6,16 +6,24 @@ package com.example.schuller.carscharging.model;
  */
 
 public class Driver {
+
+    private String name;
     private String email;
     private String password;
     private String carId;
 
     public Driver(){}
 
-    public Driver(String email, String password) {
+    public Driver(String name, String email, String password, String carId) {
+        this.name = name;
         this.email = email;
         this.password = password;
+        this.carId = carId;
     }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
 
     public String getEmail() {
         return email;

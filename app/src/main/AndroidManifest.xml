@@ -13,23 +13,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".welcome.WelcomeActivity">
+        <activity android:name=".NotLoggedIn.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginActivity" />
-        <activity android:name=".create_account.CreateAccountActivity" />
+        <activity android:name=".NotLoggedIn.LoginActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".DriverMapActivity"
+            android:name=".Drivers.DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
+        <activity android:name=".NotLoggedIn.CreateAccountActivity"></activity>
     </application>
 
 </manifest>

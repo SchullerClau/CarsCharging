@@ -8,11 +8,11 @@
 
     <ImageView
         android:id="@+id/welcome_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_marginBottom="50dp"
-        android:src="@drawable/ic_charger" />
+        android:src="@drawable/charge_station" />
 
 
     <TextView
@@ -20,8 +20,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:fontFamily="Roboto"
         android:text="@string/welcome_text"
-        android:textColor="@color/black" />
+        android:textColor="@color/colorBlack" />
 
     <Button
         android:id="@+id/find_more"
@@ -29,8 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:background="@drawable/button_border"
+        android:fontFamily="Roboto"
         android:text="Find More"
-        android:textColor="@color/black" />
+        android:textColor="@color/colorBlack" />
 
 
 </LinearLayout>
