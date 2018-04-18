@@ -6,6 +6,19 @@
     android:orientation="vertical"
     tools:context="com.example.schuller.carscharging.NotLoggedIn.LoginActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/flash"
+            tools:ignore="ContentDescription" />
+    </android.support.v7.widget.Toolbar>
+
+
     <EditText
         android:id="@+id/email"
         android:layout_width="300dp"
@@ -13,8 +26,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="64dp"
         android:backgroundTint="@color/colorPrimary"
-        android:inputType="textNoSuggestions"
-        android:hint="Email" />
+        android:hint="Email"
+        android:inputType="textNoSuggestions" />
 
     <EditText
         android:id="@+id/password"
@@ -23,8 +36,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorPrimary"
-        android:inputType="textNoSuggestions"
         android:hint="Password"
+        android:inputType="textNoSuggestions"
         android:password="true" />
 
     <Button
