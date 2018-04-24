@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -35,6 +38,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         mCreateEmail = findViewById(R.id.createEmail);
         mCreatePassword = findViewById(R.id.createPassword);
         mCreateCarID = findViewById(R.id.createCarID);
+
         mCreateAccount = findViewById(R.id.createAccoutButton);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -49,11 +53,21 @@ public class CreateAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(CreateAccountActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    newUser(email, password, carId);
+                                    String driver_id = mAuth.getCurrentUser().getUid();
+                                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_id);
+
+                                    Map newPost = new HashMap();
+                                    newPost.put("name", name);
+                                    newPost.put("email", email);
+                                    newPost.put("password", password);
+                                    newPost.put("carId", carId);
+
+                                    current_user_db.setValue(newPost);
+
                                     Toast.makeText(CreateAccountActivity.this, "User was created", Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(CreateAccountActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -62,11 +76,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                         });
             }
         });
-    }
-
-    private void newUser(String email, String password, String driverId) {
-        Driver driver = new Driver(email, password);
-        mDatabase.child("Users").child("Drivers").child(driverId).setValue(driver);
     }
 
     @Override
