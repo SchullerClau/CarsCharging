@@ -39,7 +39,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         mCreatePassword = findViewById(R.id.createPassword);
         mCreateCarID = findViewById(R.id.createCarID);
 
-        mCreateAccount = findViewById(R.id.createAccoutButton);
+        mCreateAccount = findViewById(R.id.createAccountButton);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -52,6 +52,10 @@ public class CreateAccountActivity extends AppCompatActivity {
         mCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final String name = mCreateName.getText().toString();
+                final String email = mCreateEmail.getText().toString();
+                final String password = mCreatePassword.getText().toString();
+                final String carId = mCreateCarID.getText().toString();
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(CreateAccountActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
