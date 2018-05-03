@@ -12,7 +12,9 @@ public class Driver {
     private String password;
     private String carId;
 
-    public Driver(){}
+
+    public Driver() {
+    }
 
     public Driver(String name, String email, String password, String carId) {
         this.name = name;
@@ -21,9 +23,18 @@ public class Driver {
         this.carId = carId;
     }
 
-    public String getName() { return name; }
+    public Driver(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getEmail() {
         return email;
