@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.schuller.carscharging.R;
-import com.example.schuller.carscharging.zModel.Driver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -44,11 +43,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        final String name = mCreateName.getText().toString();
-        final String email = mCreateEmail.getText().toString();
-        final String password = mCreatePassword.getText().toString();
-        final String carId = mCreateCarID.getText().toString();
-
         mCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,28 +50,40 @@ public class CreateAccountActivity extends AppCompatActivity {
                 final String email = mCreateEmail.getText().toString();
                 final String password = mCreatePassword.getText().toString();
                 final String carId = mCreateCarID.getText().toString();
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(CreateAccountActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    String driver_id = mAuth.getCurrentUser().getUid();
-                                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_id);
 
-                                    Map newPost = new HashMap();
-                                    newPost.put("name", name);
-                                    newPost.put("email", email);
-                                    newPost.put("password", password);
-                                    newPost.put("carId", carId);
+                if (name.isEmpty()) {
+                    mCreateName.setError(getString(R.string.m_create_name));
+                    mCreateName.requestFocus();
+                } else if (email.isEmpty()) {
+                    mCreateEmail.setError(getString(R.string.m_create_email));
+                    mCreateEmail.requestFocus();
+                } else if (password.length() < 6) {
+                    mCreatePassword.setError(getString(R.string.m_create_password));
+                    mCreatePassword.requestFocus();
+                } else {
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(CreateAccountActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        String driver_id = mAuth.getCurrentUser().getUid();
+                                        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_id);
 
-                                    current_user_db.setValue(newPost);
+                                        Map<String, String> newPost = new HashMap<>();
+                                        newPost.put("name", name);
+                                        newPost.put("email", email);
+                                        newPost.put("password", password);
+                                        newPost.put("carId", carId);
 
-                                    Toast.makeText(CreateAccountActivity.this, "User was created", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(CreateAccountActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                                        current_user_db.setValue(newPost);
+
+                                        Toast.makeText(CreateAccountActivity.this, "User was created", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(CreateAccountActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
     }
