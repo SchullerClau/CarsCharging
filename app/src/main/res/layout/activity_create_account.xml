@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.schuller.carscharging.NotLoggedIn.CreateAccountActivity">
+    tools:context="com.example.schuller.carscharging.signup.CreateAccountActivity">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -57,6 +57,16 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorPrimary"
         android:hint="CarID"
+        android:inputType="textNoSuggestions" />
+
+    <EditText
+        android:id="@+id/phoneNumber"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:hint="Phone"
         android:inputType="textNoSuggestions" />
 
     <Button

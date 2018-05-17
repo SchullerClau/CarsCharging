@@ -1,4 +1,4 @@
-package com.example.schuller.carscharging.NotLoggedIn;
+package com.example.schuller.carscharging.signup;
 
 import android.content.Intent;
 import android.os.Bundle;
