@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schuller.carscharging.R;
+import com.example.schuller.carscharging.driver.AvailableStation;
 import com.example.schuller.carscharging.model.Driver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,45 +43,48 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_driver = database.getReference().child("Driver");
 
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mLogin.setOnClickListener(view -> {
 
-                final String email = mEmail.getText().toString();
-                final String password = mPassword.getText().toString();
+            final String email = mEmail.getText().toString();
+            final String password = mPassword.getText().toString();
 
-                final ProgressDialog progressBar = new ProgressDialog(LoginActivity.this);
-                progressBar.setMessage("Loading...");
-                progressBar.show();
+            final ProgressDialog progressBar = new ProgressDialog(LoginActivity.this);
+            progressBar.setMessage("Loading...");
+            progressBar.show();
 
-                table_driver.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //Check if user don't exists in database
-                        if (dataSnapshot.child(encodeString(email)).exists()) {
-                            progressBar.dismiss();
-                            //Get User Information
-                            Driver driver = dataSnapshot.child(encodeString(email)).getValue(Driver.class);
+            table_driver.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //Check if user don't exists in database
+                    if (dataSnapshot.child(encodeString(email)).exists()) {
+                        progressBar.dismiss();
+                        //Get User Information
+                        Driver driver = dataSnapshot.child(encodeString(email)).getValue(Driver.class);
 
-                            if (driver != null) {
-                                if (Objects.equals(driver.getPassword(), password)) {
-                                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(LoginActivity.this, "Login error", Toast.LENGTH_SHORT).show();
-                                }
+                        if (driver != null) {
+                            if (Objects.equals(driver.getPassword(), password)) {
+                                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                Intent availableStation = new Intent(LoginActivity.this, AvailableStation.class);
+                                availableStation.putExtra("user", driver.getName());
+                                startActivity(availableStation);
                             } else {
-                                progressBar.dismiss();
-                                Toast.makeText(LoginActivity.this, "User don't exists", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Login error", Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            progressBar.dismiss();
+                            Toast.makeText(LoginActivity.this, "User don't exists", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        progressBar.dismiss();
+                        Toast.makeText(LoginActivity.this, "Invalid Email or Password", Toast.LENGTH_SHORT).show();
                     }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-            }
+                }
+            });
         });
 
         mRegister.setOnClickListener(new View.OnClickListener() {

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".CarsCharger"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,6 +26,7 @@
 
         <activity android:name=".signup.LoginActivity" />
         <activity android:name=".signup.CreateAccountActivity" />
+        <activity android:name=".driver.AvailableStation" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
