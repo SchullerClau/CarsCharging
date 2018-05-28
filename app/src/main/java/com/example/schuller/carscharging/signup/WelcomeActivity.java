@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.schuller.carscharging.R;
+import com.example.schuller.carscharging.stations.ListaProgram;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -21,7 +22,7 @@ public class WelcomeActivity extends AppCompatActivity {
         findMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, ListaProgram.class);
                 startActivity(intent);
             }
         });

@@ -30,5 +30,6 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.google.firebase:firebase-core:15.0.2'
     implementation 'com.google.firebase:firebase-database:15.0.1'
+    implementation 'com.applandeo:material-calendar-view:1.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

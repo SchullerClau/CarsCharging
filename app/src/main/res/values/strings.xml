@@ -8,4 +8,5 @@
     <string name="m_create_email">Emailul trebuie sa fie valid</string>
     <string name="m_create_password">Parola trebuie sa aiba minim 6 caractere</string>
     <string name="m_create_carId">Numarul masinii este obligatoriu</string>
+    <string name="select_day">Selecteaza ziua</string>
 </resources>
