@@ -11,6 +11,8 @@ import com.example.schuller.carscharging.model.Station;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Adapter
  * Created by schuller on 23/05/2018.
@@ -34,6 +36,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.StationV
     @Override
     public void onBindViewHolder(StationViewHolder holder, int position) {
         Station station = stations.get(position);
+        Timber.d("STATION NAME -> " + station.getName());
         holder.name.setText(station.getName());
         holder.address.setText(station.getAddress());
     }

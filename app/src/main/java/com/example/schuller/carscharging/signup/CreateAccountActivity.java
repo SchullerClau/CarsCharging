@@ -1,16 +1,18 @@
 package com.example.schuller.carscharging.signup;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.schuller.carscharging.BuildConfig;
 import com.example.schuller.carscharging.R;
+import com.example.schuller.carscharging.driver.StationActivity;
 import com.example.schuller.carscharging.model.Driver;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,10 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText mCreatePassword;
     private EditText mCreateCarID;
     private EditText mPhoneNumber;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    final DatabaseReference table_driver = database.getReference("Drivers");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,59 +45,44 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         Button mCreateAccount = findViewById(R.id.createAccountButton);
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_driver = database.getReference("Driver");
-
-        mCreateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String name = mCreateName.getText().toString();
-                final String email = mCreateEmail.getText().toString();
-                final String password = mCreatePassword.getText().toString();
-                final String carId = mCreateCarID.getText().toString();
-                final String number = mPhoneNumber.getText().toString();
-
-                if (name.isEmpty()) {
-                    mCreateName.setError(getString(R.string.m_create_name));
-                    mCreateName.requestFocus();
-                } else if (email.isEmpty()) {
-                    mCreateEmail.setError(getString(R.string.m_create_email));
-                    mCreateEmail.requestFocus();
-                } else if (password.length() < 6) {
-                    mCreatePassword.setError(getString(R.string.m_create_password));
-                    mCreatePassword.requestFocus();
-                } else if (carId.isEmpty()) {
-                    mCreateCarID.setError(getString(R.string.m_create_carId));
-                    mCreateCarID.requestFocus();
-                } else {
-                    final ProgressDialog progressBar = new ProgressDialog(CreateAccountActivity.this);
-                    progressBar.setMessage("Loading...");
-                    progressBar.show();
-
-                    table_driver.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            //check if already exists user
-                            if (dataSnapshot.child((encodeString(email))).exists()) {
-                                progressBar.dismiss();
-                                Toast.makeText(CreateAccountActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
-                            } else {
-                                progressBar.dismiss();
-                                Driver driver = new Driver(name, password, carId, number);
-                                table_driver.child(encodeString(email)).setValue(driver);
-                                Toast.makeText(CreateAccountActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
+        mCreateAccount.setOnClickListener(view -> {
+            signUp();
         });
+
+        setDebugValues();
+    }
+
+    public void signUp() {
+
+        final String name = mCreateName.getText().toString();
+        final String email = mCreateEmail.getText().toString();
+        final String carId = mCreateCarID.getText().toString();
+        final String number = mPhoneNumber.getText().toString();
+
+        auth.createUserWithEmailAndPassword(mCreateEmail.getText().toString(), mCreatePassword.getText().toString())
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(CreateAccountActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
+                        table_driver.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                writeNewUser(email, name, carId, number);
+                                Toast.makeText(CreateAccountActivity.this, "Added successful", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        Intent intent = new Intent(CreateAccountActivity.this, StationActivity.class);
+                        startActivity(intent);
+
+                    } else {
+                        Toast.makeText(CreateAccountActivity.this, "Sign up failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -99,6 +90,21 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    private void setDebugValues() {
+        if (BuildConfig.DEBUG) {
+            mCreateEmail.setText("test@gmail.com");
+            mCreatePassword.setText("123456");
+            mCreateName.setText("test");
+            mCreateCarID.setText("test");
+            mPhoneNumber.setText("test");
+        }
+    }
+
+    private void writeNewUser(String email, String name, String carId, String phoneNumber) {
+        Driver user = new Driver(email, name, carId, phoneNumber);
+        table_driver.child(encodeString(email)).setValue(user);
     }
 
     public String encodeString(String string) {

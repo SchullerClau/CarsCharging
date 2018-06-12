@@ -6,20 +6,27 @@ package com.example.schuller.carscharging.model;
  */
 
 public class Driver {
-
+    private String email;
     private String name;
-    private String password;
     private String carId;
     private String phoneNumber;
 
     public Driver() {
     }
 
-    public Driver(String name, String password, String carId, String phoneNumber) {
+    public Driver(String email, String name, String carId, String phoneNumber) {
+        this.email = email;
         this.name = name;
-        this.password = password;
         this.carId = carId;
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getName() {
@@ -28,14 +35,6 @@ public class Driver {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCarId() {

@@ -1,25 +1,20 @@
 package com.example.schuller.carscharging.signup;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.schuller.carscharging.BuildConfig;
 import com.example.schuller.carscharging.R;
-import com.example.schuller.carscharging.driver.AvailableStation;
-import com.example.schuller.carscharging.model.Driver;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.example.schuller.carscharging.driver.StationActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Objects;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,6 +23,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView mRegister;
     EditText mEmail;
     EditText mPassword;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,60 +40,41 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_driver = database.getReference().child("Driver");
 
-        mLogin.setOnClickListener(view -> {
+        mLogin.setOnClickListener(view -> signIn());
 
-            final String email = mEmail.getText().toString();
-            final String password = mPassword.getText().toString();
-
-            final ProgressDialog progressBar = new ProgressDialog(LoginActivity.this);
-            progressBar.setMessage("Loading...");
-            progressBar.show();
-
-            table_driver.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //Check if user don't exists in database
-                    if (dataSnapshot.child(encodeString(email)).exists()) {
-                        progressBar.dismiss();
-                        //Get User Information
-                        Driver driver = dataSnapshot.child(encodeString(email)).getValue(Driver.class);
-
-                        if (driver != null) {
-                            if (Objects.equals(driver.getPassword(), password)) {
-                                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                Intent availableStation = new Intent(LoginActivity.this, AvailableStation.class);
-                                availableStation.putExtra("user", driver.getName());
-                                startActivity(availableStation);
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Login error", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            progressBar.dismiss();
-                            Toast.makeText(LoginActivity.this, "User don't exists", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        progressBar.dismiss();
-                        Toast.makeText(LoginActivity.this, "Invalid Email or Password", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+        mRegister.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+            startActivity(intent);
         });
 
-        mRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
-                startActivity(intent);
-            }
-        });
+        setDebugValues();
     }
 
-    public String encodeString(String string) {
-        return string.replace(".", ",");
+    private void setDebugValues() {
+        if (BuildConfig.DEBUG) {
+            mEmail.setText("test@gmail.com");
+            mPassword.setText("123456");
+        }
+    }
+
+    public void signIn() {
+        if (fieldsAreValid()) {
+            auth.signInWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString())
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Sign in successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, StationActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Sign in failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(LoginActivity.this, "Email & Password cannot be empty!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean fieldsAreValid() {
+        return !TextUtils.isEmpty(mEmail.getText()) && !TextUtils.isEmpty(mPassword.getText());
     }
 }
