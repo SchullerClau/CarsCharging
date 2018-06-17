@@ -1,6 +1,7 @@
 package com.example.schuller.carscharging.driver;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -32,17 +33,26 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener {
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -65,7 +75,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
+            mMap.setOnInfoWindowClickListener(this);
             init();
         }
     }
@@ -90,6 +100,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
+
+    //firebase
+//    FirebaseAuth auth = FirebaseAuth.getInstance();
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    final DatabaseReference mDb = database.getReference("Stations");
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,6 +150,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.d(TAG, "onClick: clicked gps icon");
             getDeviceLocation();
         });
+        addMarker();
 
         hideSoftKeyboard();
     }
@@ -160,6 +177,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
                     address.getAddressLine(0));
         }
+        addMarker();
     }
 
     private void getDeviceLocation() {
@@ -259,8 +277,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    public void addMarker() {
+        mDb.addValueEventListener(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (long i = 0; i<dataSnapshot.getChildrenCount(); i++){
+                    String getName = dataSnapshot.child(Long.toString(i)).child("Nume").getValue(String.class);
+                    String getLat = dataSnapshot.child(Long.toString(i)).child("Latitudine").getValue(String.class);
+                    String getLng = dataSnapshot.child(Long.toString(i)).child("Longitudine").getValue(String.class);
+                    String getSnippet = dataSnapshot.child(Long.toString(i)).child("Adresa").getValue(String.class);
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(getLat),Double.parseDouble(getLng))).title(getName).snippet(getSnippet));
+                }
+            }
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(MapActivity.this, StationActivity.class);
+        startActivity(intent);
+    }
+
     private void hideSoftKeyboard() {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
-
 }
