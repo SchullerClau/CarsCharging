@@ -37,6 +37,8 @@
         <activity android:name=".signup.CreateAccountActivity" />
         <activity android:name=".driver.StationActivity" />
         <activity android:name=".driver.MapActivity" />
+        <activity android:name=".stations.StationBlacklist"/>
+        <activity android:name=".stations.StationsSchedule"/>
 
     </application>
 

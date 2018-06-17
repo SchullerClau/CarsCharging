@@ -101,11 +101,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
 
-    //firebase
-//    FirebaseAuth auth = FirebaseAuth.getInstance();
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Stations");
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -194,7 +191,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         Log.d(TAG, "onComplete: found location!");
                         Location currentLocation = (Location) task.getResult();
 
-                        moveCamera(new LatLng(46.7712, 23.6236),
+                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                 DEFAULT_ZOOM,
                                 "My Location");
 
@@ -212,13 +209,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        if (!title.equals("My Location")) {
-            MarkerOptions options = new MarkerOptions()
-                    .position(latLng)
-                    .title(title);
-            mMap.addMarker(options);
-        }
 
         hideSoftKeyboard();
     }
