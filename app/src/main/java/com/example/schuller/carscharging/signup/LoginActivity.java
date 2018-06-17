@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText mPassword;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference mDb = database.getReference("Stations");
+    DatabaseReference mDb = database.getReference().child("Stations");
 
 
     @Override
@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signIn() {
+        singInAsStation();
         if (fieldsAreValid()) {
             auth.signInWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString())
                     .addOnCompleteListener(this, task -> {
@@ -84,8 +85,9 @@ public class LoginActivity extends AppCompatActivity {
                     });
         } else {
             Toast.makeText(LoginActivity.this, "Email & Password cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
         }
-        singInAsStation();
+        Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_SHORT).show();
     }
 
     private boolean fieldsAreValid() {
