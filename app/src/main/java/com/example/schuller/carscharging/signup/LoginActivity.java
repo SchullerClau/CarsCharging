@@ -9,12 +9,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.schuller.carscharging.BuildConfig;
 import com.example.schuller.carscharging.R;
+import com.example.schuller.carscharging.driver.MapActivity;
 import com.example.schuller.carscharging.driver.StationActivity;
+import com.example.schuller.carscharging.stations.StationsSchedule;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -24,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText mEmail;
     EditText mPassword;
     FirebaseAuth auth = FirebaseAuth.getInstance();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference mDb = database.getReference("Stations");
 
 
     @Override
@@ -46,15 +52,23 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
             startActivity(intent);
         });
-
-        setDebugValues();
     }
 
-    private void setDebugValues() {
-        if (BuildConfig.DEBUG) {
-            mEmail.setText("test@gmail.com");
-            mPassword.setText("123456");
-        }
+
+    public void singInAsStation() {
+        mDb.addValueEventListener(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnap) {
+                for (long i = 0; i < dataSnap.getChildrenCount(); i++) {
+                    String getEmail = dataSnap.child(Long.toString(i)).child("email").getValue(String.class);
+                    if (mEmail.getText().toString().equals(getEmail) && mPassword.getText().toString().equals("123456")) {
+                        Intent intent = new Intent(LoginActivity.this, StationActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            }
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     public void signIn() {
@@ -63,15 +77,15 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Sign in successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, StationActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MapActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(LoginActivity.this, "Sign in failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
             Toast.makeText(LoginActivity.this, "Email & Password cannot be empty!", Toast.LENGTH_SHORT).show();
         }
+        singInAsStation();
     }
 
     private boolean fieldsAreValid() {
