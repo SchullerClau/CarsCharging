@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.example.schuller.carscharging.R;
 import com.example.schuller.carscharging.driver.MapActivity;
 import com.example.schuller.carscharging.driver.StationActivity;
-import com.example.schuller.carscharging.stations.StationsSchedule;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
