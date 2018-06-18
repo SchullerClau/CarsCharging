@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.schuller.carscharging.R;
 import com.example.schuller.carscharging.driver.MapActivity;
 import com.example.schuller.carscharging.driver.StationActivity;
+import com.example.schuller.carscharging.stations.StationsScheduleActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,7 +61,8 @@ public class LoginActivity extends AppCompatActivity {
                 for (long i = 0; i < dataSnap.getChildrenCount(); i++) {
                     String getEmail = dataSnap.child(Long.toString(i)).child("email").getValue(String.class);
                     if (mEmail.getText().toString().equals(getEmail) && mPassword.getText().toString().equals("123456")) {
-                        Intent intent = new Intent(LoginActivity.this, StationActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, StationsScheduleActivity.class);
+                        intent.putExtra("stationEmail", getEmail);
                         startActivity(intent);
                     }
                 }
@@ -86,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Email & Password cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
-        Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_SHORT).show();
     }
 
     private boolean fieldsAreValid() {

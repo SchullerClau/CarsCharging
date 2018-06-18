@@ -2,19 +2,12 @@
     <string name="app_name">CarsCharging</string>
     <string name="title_activity_driver_map">Map</string>
     <string name="title_activity_station_map">Map</string>
-    <string name="welcome_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="welcome_text">Simply select your favorite cars charging station, see when this is available and make an appointment. \n\n Find out how easy is to find a place for charging your car. </string>
     <string name="create_account"><u>Don\'t you have an account?</u></string>
     <string name="m_create_name">Campul trebuie sa contina numele</string>
     <string name="m_create_email">Emailul trebuie sa fie valid</string>
     <string name="m_create_password">Parola trebuie sa aiba minim 6 caractere</string>
     <string name="m_create_carId">Numarul masinii este obligatoriu</string>
     <string name="google_maps_API_key">AIzaSyDIO1cE31gK-wn7Y7WWOvwe2F-4AW9lYz8</string>
-    <string-array name="list_items">
-        <item>iPhone 6__845$</item>
-        <item>iPad Air__800$</item>
-        <item>iPad Mini 2__500$</item>
-        <item>Galaxy Note 4__740$</item>
-        <item>Galaxy Alpha__599$</item>
-        <item>Galaxy Golden__950$</item>
-    </string-array>
+    <string name="go_to_blacklist"><u>Go to blacklist -></u></string>
 </resources>

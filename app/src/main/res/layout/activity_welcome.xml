@@ -22,6 +22,7 @@
         android:layout_gravity="center_vertical"
         android:fontFamily="Roboto"
         android:text="@string/welcome_text"
+        android:textAlignment="center"
         android:textColor="@color/colorBlack" />
 
     <Button

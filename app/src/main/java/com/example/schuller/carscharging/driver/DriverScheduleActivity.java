@@ -48,7 +48,7 @@ public class DriverScheduleActivity extends AppCompatActivity{
                             if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
                                 String mCarId = dataSnapshot.child(Long.toString(i)).child("carId").getValue(String.class);
                                 list.get(j).put(SECOND_COLUMN, mCarId);
-                                list.get(j).put(THIRD_COLUMN, "Create schedule");
+                                list.get(j).put(THIRD_COLUMN, "");
                             }
                         }
                     }
@@ -70,74 +70,73 @@ public class DriverScheduleActivity extends AppCompatActivity{
         HashMap<String,String> hashmap=new HashMap<String, String>();
         hashmap.put(FIRST_COLUMN, "00:00 - 02:00");
         hashmap.put(SECOND_COLUMN, "");
-        hashmap.put(THIRD_COLUMN, "");
+        hashmap.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap);
 
         HashMap<String,String> hashmap2=new HashMap<String, String>();
         hashmap2.put(FIRST_COLUMN, "02:00 - 04:00");
         hashmap2.put(SECOND_COLUMN, "");
-        hashmap2.put(THIRD_COLUMN, "");
+        hashmap2.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap2);
 
         HashMap<String,String> hashmap3=new HashMap<String, String>();
         hashmap3.put(FIRST_COLUMN, "04:00 - 06:00");
         hashmap3.put(SECOND_COLUMN, "");
-        hashmap3.put(THIRD_COLUMN, "");
+        hashmap3.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap3);
 
         HashMap<String,String> hashmap4=new HashMap<String, String>();
         hashmap4.put(FIRST_COLUMN, "06:00 - 08:00");
         hashmap4.put(SECOND_COLUMN, "");
-        hashmap4.put(THIRD_COLUMN, "");
+        hashmap4.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap4);
 
         HashMap<String,String> hashmap5=new HashMap<String, String>();
         hashmap5.put(FIRST_COLUMN, "08:00 - 10:00");
         hashmap5.put(SECOND_COLUMN, "");
-        hashmap5.put(THIRD_COLUMN, "");
+        hashmap5.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap5);
 
         HashMap<String,String> hashmap6=new HashMap<String, String>();
         hashmap6.put(FIRST_COLUMN, "10:00 - 12:00");
         hashmap6.put(SECOND_COLUMN, "");
-        hashmap6.put(THIRD_COLUMN, "");
+        hashmap6.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap6);
 
         HashMap<String,String> hashmap7=new HashMap<String, String>();
         hashmap7.put(FIRST_COLUMN, "12:00 - 14:00");
         hashmap7.put(SECOND_COLUMN, "");
-        hashmap7.put(THIRD_COLUMN, "");
+        hashmap7.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap7);
 
         HashMap<String,String> hashmap8=new HashMap<String, String>();
         hashmap8.put(FIRST_COLUMN, "14:00 - 16:00");
         hashmap8.put(SECOND_COLUMN, "");
-        hashmap8.put(THIRD_COLUMN, "");
+        hashmap8.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap8);
 
         HashMap<String,String> hashmap9=new HashMap<String, String>();
         hashmap9.put(FIRST_COLUMN, "16:00 - 18:00");
         hashmap9.put(SECOND_COLUMN, "");
-        hashmap9.put(THIRD_COLUMN, "");
+        hashmap9.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap9);
-
 
         HashMap<String,String> hashmap10=new HashMap<String, String>();
         hashmap10.put(FIRST_COLUMN, "18:00 - 20:00");
         hashmap10.put(SECOND_COLUMN, "");
-        hashmap10.put(THIRD_COLUMN, "");
+        hashmap10.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap10);
 
         HashMap<String,String> hashmap11=new HashMap<String, String>();
         hashmap11.put(FIRST_COLUMN, "20:00 - 22:00");
         hashmap11.put(SECOND_COLUMN, "");
-        hashmap11.put(THIRD_COLUMN, "");
+        hashmap11.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap11);
 
         HashMap<String,String> hashmap12=new HashMap<String, String>();
         hashmap12.put(FIRST_COLUMN, "22:00 - 24:00");
         hashmap12.put(SECOND_COLUMN, "");
-        hashmap12.put(THIRD_COLUMN, "");
+        hashmap12.put(THIRD_COLUMN, "Make an appointment");
         list.add(hashmap12);
     }
 }
