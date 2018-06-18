@@ -2,8 +2,14 @@ package com.example.schuller.carscharging.driver;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.DatePicker;
+import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
+import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.example.schuller.carscharging.R;
 import com.example.schuller.carscharging.adapter.DriverScheduleAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -13,7 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by schuller on 6/18/18.
@@ -26,6 +34,9 @@ public class DriverScheduleActivity extends AppCompatActivity{
     public static final String SECOND_COLUMN="Second";
     public static final String THIRD_COLUMN="Third";
 
+    private Button selectDay;
+    private OnSelectDateListener dateListener;
+    private Calendar calendar;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Schedule");
@@ -60,6 +71,31 @@ public class DriverScheduleActivity extends AppCompatActivity{
             }
 
         });
+
+        selectDay = findViewById(R.id.driverScheduleGetCalendar);
+        calendar = Calendar.getInstance();
+        calendar.set(2018,8,8);
+
+        dateListener = new OnSelectDateListener() {
+            @Override
+            public void onSelect(List<Calendar> calendars) {
+            }
+        };
+
+
+        selectDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerBuilder builder = new DatePickerBuilder(DriverScheduleActivity.this, dateListener)
+                        .pickerType(CalendarView.ONE_DAY_PICKER)
+                        .headerColor(R.color.colorPrimary)
+                        .selectionColor(R.color.colorPrimary);
+
+                DatePicker datePicker = builder.build();
+                datePicker.show();
+            }
+        });
+
     }
 
     private void populateList() {
