@@ -1,4 +1,5 @@
-package com.example.schuller.carscharging;
+package com.example.schuller.carscharging.adapter;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,13 +12,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class ListViewAdapter extends BaseAdapter{
+import com.example.schuller.carscharging.R;
+
+
+public class DriverScheduleAdapter extends BaseAdapter {
 
     public ArrayList<HashMap<String, String>> list;
     Activity activity;
     public static final String FIRST_COLUMN="First";
+    public static final String SECOND_COLUMN="Second";
+    public static final String THIRD_COLUMN="Third";
 
-    public ListViewAdapter(Activity activity,ArrayList<HashMap<String, String>> list){
+    public DriverScheduleAdapter(Activity activity, ArrayList<HashMap<String, String>> list){
         super();
         this.activity=activity;
         this.list=list;
@@ -43,31 +49,37 @@ public class ListViewAdapter extends BaseAdapter{
 
     private class ViewHolder{
         TextView txtFirst;
+        TextView txtSecond;
+        TextView txtThird;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
 
-        ViewHolder holder;
+        DriverScheduleAdapter.ViewHolder holder;
 
         LayoutInflater inflater=activity.getLayoutInflater();
 
         if(convertView == null){
 
-            convertView=inflater.inflate(R.layout.activity_station_blacklist_row, null);
-            holder=new ViewHolder();
+            convertView=inflater.inflate(R.layout.activity_driver_schedule_row, null);
+            holder=new DriverScheduleAdapter.ViewHolder();
 
-            holder.txtFirst=(TextView) convertView.findViewById(R.id.blacklistCarId);
+            holder.txtFirst=(TextView) convertView.findViewById(R.id.driverScheduleHour);
+            holder.txtSecond=(TextView) convertView.findViewById(R.id.driverScheduleCarId);
+            holder.txtThird=(TextView) convertView.findViewById(R.id.driverScheduleButton);
 
             convertView.setTag(holder);
         }else{
 
-            holder=(ViewHolder) convertView.getTag();
+            holder=(DriverScheduleAdapter.ViewHolder) convertView.getTag();
         }
 
         HashMap<String, String> map=list.get(position);
         holder.txtFirst.setText(map.get(FIRST_COLUMN));
+        holder.txtSecond.setText(map.get(SECOND_COLUMN));
+        holder.txtThird.setText(map.get(THIRD_COLUMN));
 
         return convertView;
     }

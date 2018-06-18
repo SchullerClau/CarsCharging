@@ -1,17 +1,10 @@
 package com.example.schuller.carscharging.stations;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.schuller.carscharging.ListViewAdapter;
+import com.example.schuller.carscharging.adapter.StationBlacklistAdapter;
 import com.example.schuller.carscharging.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,23 +13,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-
-import timber.log.Timber;
 
 
-public class StationsBlacklist extends AppCompatActivity {
-
+public class StationsBlacklistActivity extends AppCompatActivity {
 
     private ArrayList<HashMap<String, String>> list;
     public static final String FIRST_COLUMN="First";
+    public static final String SECOND_COLUMN="Second";
+
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Stations");
     final DatabaseReference mBlackDb = database.getReference("Stations/0/Blacklist");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,29 +33,31 @@ public class StationsBlacklist extends AppCompatActivity {
         setContentView(R.layout.activity_station_blacklist);
 
         ListView listView=findViewById(R.id.blacklist);
-        populateList();
-        ListViewAdapter adapter=new ListViewAdapter(this, list);
-        listView.setAdapter(adapter);
-    }
 
-    private void populateList() {
-        // TODO Auto-generated method stub
-
-        list=new ArrayList<>();
+        list=new ArrayList<HashMap<String,String>>();
 
         mBlackDb.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (long i=0; i<dataSnapshot.getChildrenCount(); i++){
                     String mCarId = dataSnapshot.child(Long.toString(i)).getValue(String.class);
                     HashMap<String,String> hashmap=new HashMap<String, String>();
-                    hashmap.put(FIRST_COLUMN+i, mCarId);
+                    hashmap.put(FIRST_COLUMN, mCarId);
+                    hashmap.put(SECOND_COLUMN, "Remove");
                     list.add(hashmap);
                 }
+                StationBlacklistAdapter adapter=new StationBlacklistAdapter(StationsBlacklistActivity.this, list);
+                listView.setAdapter(adapter);
             }
             public void onCancelled(DatabaseError databaseError) {
-
             }
+
         });
+    }
+
+    private void populateList() {
+        // TODO Auto-generated method stub
+
+
 //        HashMap<String,String> hashmap=new HashMap<>();
 //        hashmap.put(FIRST_COLUMN, "Allo messaging");
 //        list.add(hashmap);
