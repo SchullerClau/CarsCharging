@@ -48,8 +48,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         mCreateAccount.setOnClickListener(view -> {
             signUp();
         });
-
-        setDebugValues();
     }
 
     public void signUp() {
@@ -90,16 +88,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    private void setDebugValues() {
-        if (BuildConfig.DEBUG) {
-            mCreateEmail.setText("test@gmail.com");
-            mCreatePassword.setText("123456");
-            mCreateName.setText("test");
-            mCreateCarID.setText("test");
-            mPhoneNumber.setText("test");
-        }
     }
 
     private void writeNewUser(String email, String name, String carId, String phoneNumber) {

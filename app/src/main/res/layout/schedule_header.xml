@@ -17,7 +17,17 @@
             android:padding="10sp"
             android:gravity="left"
             android:textStyle="bold"
-            android:text="Car Id"
+            android:layout_width="20dp"
+            android:text="Hour"
+            android:textColor="@color/colorBlack"
+            android:background="@color/colorPrimary"
+            />
+        <TextView
+            android:layout_column="0"
+            android:padding="10sp"
+            android:gravity="left"
+            android:textStyle="bold"
+            android:text="CarId"
             android:textColor="@color/colorBlack"
             android:background="@color/colorPrimary"
             />

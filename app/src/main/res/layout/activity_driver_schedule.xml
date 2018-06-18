@@ -8,6 +8,36 @@
 
     <include layout="@layout/toolbar_layout" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="12dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Appointments"
+            android:id="@+id/driverTitle"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open Calendar"
+            android:id="@+id/driverScheduleGetCalendar"
+            android:layout_marginLeft="60dp"
+            android:textStyle="bold"
+            android:background="@drawable/table_border" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include layout="@layout/schedule_header" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/driverScheduleList"
         android:fadingEdge="vertical"

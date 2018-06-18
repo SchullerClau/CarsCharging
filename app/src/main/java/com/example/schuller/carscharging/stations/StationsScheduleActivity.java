@@ -1,8 +1,10 @@
 package com.example.schuller.carscharging.stations;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.schuller.carscharging.R;
 import com.example.schuller.carscharging.adapter.StationScheduleAdapter;
@@ -26,12 +28,17 @@ public class StationsScheduleActivity extends AppCompatActivity {
     public static final String SECOND_COLUMN="Second";
     public static final String THIRD_COLUMN="Third";
 
+    TextView mBlacklistButton;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Schedule");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Intent intent = getIntent();
+        String intentEmail = intent.getStringExtra("stationEmail");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_schedule);
 
@@ -42,7 +49,7 @@ public class StationsScheduleActivity extends AppCompatActivity {
         mDb.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (long i=0; i<dataSnapshot.getChildrenCount(); i++){
-                    if (dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class).equals("18-07-2018") && dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class).equals("anahotelsbrasov@gmail.com")) {
+                    if (dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class).equals("18-07-2018") && dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class).equals(intentEmail)) {
                         for(int j = 0; j<list.size(); j++) {
                             String mHour = dataSnapshot.child(Long.toString(i)).child("ora").getValue(String.class);
                             if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
@@ -59,6 +66,14 @@ public class StationsScheduleActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
 
+        });
+
+        mBlacklistButton = findViewById(R.id.stationScheduleGoToBlacklist);
+
+        mBlacklistButton.setOnClickListener(view -> {
+            Intent intentBlack = new Intent(StationsScheduleActivity.this, StationsBlacklistActivity.class);
+            intentBlack.putExtra("stationEmailBlack", intentEmail);
+            startActivity(intentBlack);
         });
     }
 
