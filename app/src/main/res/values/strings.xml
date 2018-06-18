@@ -9,4 +9,12 @@
     <string name="m_create_password">Parola trebuie sa aiba minim 6 caractere</string>
     <string name="m_create_carId">Numarul masinii este obligatoriu</string>
     <string name="google_maps_API_key">AIzaSyDIO1cE31gK-wn7Y7WWOvwe2F-4AW9lYz8</string>
+    <string-array name="list_items">
+        <item>iPhone 6__845$</item>
+        <item>iPad Air__800$</item>
+        <item>iPad Mini 2__500$</item>
+        <item>Galaxy Note 4__740$</item>
+        <item>Galaxy Alpha__599$</item>
+        <item>Galaxy Golden__950$</item>
+    </string-array>
 </resources>

@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.schuller.carscharging.driver.MapActivity;
+import com.example.schuller.carscharging.driver.StationActivity;
+import com.example.schuller.carscharging.stations.StationsBlacklist;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.example.schuller.carscharging.R;
@@ -31,7 +33,7 @@ public class WelcomeActivity extends AppCompatActivity {
             findMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(WelcomeActivity.this, StationsBlacklist.class);
                     startActivity(intent);
                 }
             });
