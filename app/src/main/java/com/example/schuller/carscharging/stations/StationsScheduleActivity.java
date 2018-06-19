@@ -1,11 +1,20 @@
 package com.example.schuller.carscharging.stations;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.DatePicker;
+import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
+import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.example.schuller.carscharging.R;
 import com.example.schuller.carscharging.adapter.StationScheduleAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -14,8 +23,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDateTime;
+import java.time.MonthDay;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by schuller on 6/17/18.
@@ -33,8 +47,20 @@ public class StationsScheduleActivity extends AppCompatActivity {
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Schedule");
 
+
+    private Button selectDay;
+    private OnSelectDateListener dateListener;
+    private Calendar calendar;
+
+    private String selectedYear = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+    private String selectedMonth = String.valueOf(Calendar.getInstance().get(Calendar.MONTH)+1);
+    private String selectedDay = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (Integer.parseInt(selectedMonth) < 10)
+            selectedMonth = "0"+selectedMonth;
+        String currentDate = selectedDay + "-" + selectedMonth + "-" +selectedYear;
 
         Intent intent = getIntent();
         String intentEmail = intent.getStringExtra("stationEmail");
@@ -49,7 +75,7 @@ public class StationsScheduleActivity extends AppCompatActivity {
         mDb.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (long i=0; i<dataSnapshot.getChildrenCount(); i++){
-                    if (dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class).equals("18-07-2018") && dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class).equals(intentEmail)) {
+                    if (dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class).equals(currentDate) && dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class).equals(intentEmail)) {
                         for(int j = 0; j<list.size(); j++) {
                             String mHour = dataSnapshot.child(Long.toString(i)).child("ora").getValue(String.class);
                             if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
@@ -75,6 +101,101 @@ public class StationsScheduleActivity extends AppCompatActivity {
             intentBlack.putExtra("stationEmailBlack", intentEmail);
             startActivity(intentBlack);
         });
+
+        selectDay = findViewById(R.id.stationScheduleGetCalendar);
+        calendar = Calendar.getInstance();
+
+        dateListener = new OnSelectDateListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSelect(List<Calendar> calendar) {
+                String mTime = String.valueOf(calendar.get(0).getTime());
+                String[] splittedDateTime = mTime.split(" ");
+                selectedYear = splittedDateTime[5];
+                selectedMonth = getConvertedMonth(splittedDateTime[1]);
+                selectedDay = splittedDateTime[2];
+
+                String currentDate = selectedDay + "-" + selectedMonth + "-" +selectedYear;
+
+                populateList();
+
+                mDb.addValueEventListener(new ValueEventListener() {
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (long i=0; i<dataSnapshot.getChildrenCount(); i++){
+                            if (dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class).equals(currentDate) && dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class).equals(intentEmail)) {
+                                for(int j = 0; j<list.size(); j++) {
+                                    String mHour = dataSnapshot.child(Long.toString(i)).child("ora").getValue(String.class);
+                                    if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
+                                        String mCarId = dataSnapshot.child(Long.toString(i)).child("carId").getValue(String.class);
+                                        list.get(j).put(SECOND_COLUMN, mCarId);
+                                        list.get(j).put(THIRD_COLUMN, "Add to Blacklist");
+                                    }
+                                }
+                            }
+                        }
+                        StationScheduleAdapter adapter=new StationScheduleAdapter(StationsScheduleActivity.this, list);
+                        listView.setAdapter(adapter);
+                    }
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+
+                });
+
+            }
+        };
+
+        selectDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerBuilder builder = new DatePickerBuilder(StationsScheduleActivity.this, dateListener)
+                        .pickerType(CalendarView.ONE_DAY_PICKER)
+                        .headerColor(R.color.colorPrimary)
+                        .selectionColor(R.color.colorPrimary);
+
+                DatePicker datePicker = builder.build();
+                datePicker.show();
+            }
+        });
+    }
+
+    private String getConvertedMonth(String month){
+        if (month.equals("Jan")){
+            month = "01";
+        }
+        if (month.equals("Feb")){
+            month = "02";
+        }
+        if (month.equals("Mar")){
+            month = "03";
+        }
+        if (month.equals("Apr")){
+            month = "04";
+        }
+        if (month.equals("May")){
+            month = "05";
+        }
+        if (month.equals("Jun")){
+            month = "06";
+        }
+        if (month.equals("Jul")){
+            month = "07";
+        }
+        if (month.equals("Aug")){
+            month = "08";
+        }
+        if (month.equals("Sep")){
+            month = "09";
+        }
+        if (month.equals("Oct")){
+            month = "10";
+        }
+        if (month.equals("Nov")){
+            month = "11";
+        }
+        if (month.equals("Dec")){
+            month = "12";
+        }
+        return month;
     }
 
     private void populateList() {

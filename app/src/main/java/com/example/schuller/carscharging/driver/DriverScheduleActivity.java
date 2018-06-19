@@ -1,9 +1,18 @@
 package com.example.schuller.carscharging.driver;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.DatePicker;
+import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
+import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.example.schuller.carscharging.R;
 import com.example.schuller.carscharging.adapter.DriverScheduleAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -13,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by schuller on 6/18/18.
@@ -26,12 +37,28 @@ public class DriverScheduleActivity extends AppCompatActivity{
     public static final String SECOND_COLUMN="Second";
     public static final String THIRD_COLUMN="Third";
 
+    private Button selectDay;
+    private OnSelectDateListener dateListener;
+    private Calendar calendar;
+
+    private String selectedYear = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+    private String selectedMonth = String.valueOf(Calendar.getInstance().get(Calendar.MONTH)+1);
+    private String selectedDay = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Schedule");
+    final DatabaseReference mStationDb = database.getReference("Stations");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (Integer.parseInt(selectedMonth) < 10)
+            selectedMonth = "0"+selectedMonth;
+        String currentDate = selectedDay + "-" + selectedMonth + "-" +selectedYear;
+
+        Intent intent = getIntent();
+        String intentName = intent.getStringExtra("stationName");
+        Log.d("@@@@@@@@@",intentName);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_schedule);
 
@@ -40,26 +67,159 @@ public class DriverScheduleActivity extends AppCompatActivity{
         populateList();
 
         mDb.addValueEventListener(new ValueEventListener() {
+            @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (long i=0; i<dataSnapshot.getChildrenCount(); i++){
-                    if (dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class).equals("18-07-2018") && dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class).equals("anahotelsbrasov@gmail.com")) {
-                        for(int j = 0; j<list.size(); j++) {
-                            String mHour = dataSnapshot.child(Long.toString(i)).child("ora").getValue(String.class);
-                            if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
-                                String mCarId = dataSnapshot.child(Long.toString(i)).child("carId").getValue(String.class);
-                                list.get(j).put(SECOND_COLUMN, mCarId);
-                                list.get(j).put(THIRD_COLUMN, "");
+                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+                    String iDate = dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class);
+                    String iEmail = dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class);
+                    String mCarId = dataSnapshot.child(Long.toString(i)).child("carId").getValue(String.class);
+                    String mHour = dataSnapshot.child(Long.toString(i)).child("ora").getValue(String.class);
+                    mStationDb.addValueEventListener(new ValueEventListener() {
+
+                        public void onDataChange(DataSnapshot stationSnapshot) {
+
+                                for (long k = 0; k < stationSnapshot.getChildrenCount(); k++){
+                                    if (iDate.equals(currentDate)
+                                            && iEmail.equals(stationSnapshot.child(Long.toString(k)).child("email").getValue(String.class))
+                                            && stationSnapshot.child(Long.toString(k)).child("Nume").getValue(String.class).equals(intentName) )
+                                           {
+                                        for (int j = 0; j < list.size(); j++) {
+                                            if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
+                                                list.get(j).put(SECOND_COLUMN, mCarId);
+                                                list.get(j).put(THIRD_COLUMN, "");
+                                            }
+                                        }
+                                    }
+                                }
+                            DriverScheduleAdapter adapter=new DriverScheduleAdapter(DriverScheduleActivity.this, list);
+                            listView.setAdapter(adapter);
                             }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
-                    }
+                    });
                 }
-                DriverScheduleAdapter adapter=new DriverScheduleAdapter(DriverScheduleActivity.this, list);
-                listView.setAdapter(adapter);
             }
+            @Override
             public void onCancelled(DatabaseError databaseError) {
             }
-
         });
+
+        selectDay = findViewById(R.id.driverScheduleGetCalendar);
+        calendar = Calendar.getInstance();
+
+        dateListener = new OnSelectDateListener() {
+            @Override
+            public void onSelect(List<Calendar> calendar) {
+                String mTime = String.valueOf(calendar.get(0).getTime());
+                String[] splittedDateTime = mTime.split(" ");
+                selectedYear = splittedDateTime[5];
+                selectedMonth = getConvertedMonth(splittedDateTime[1]);
+                selectedDay = splittedDateTime[2];
+
+                String currentDate = selectedDay + "-" + selectedMonth + "-" +selectedYear;
+
+                populateList();
+
+                mDb.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+                            String iDate = dataSnapshot.child(Long.toString(i)).child("data").getValue(String.class);
+                            String iEmail = dataSnapshot.child(Long.toString(i)).child("stationEmail").getValue(String.class);
+                            String mCarId = dataSnapshot.child(Long.toString(i)).child("carId").getValue(String.class);
+                            String mHour = dataSnapshot.child(Long.toString(i)).child("ora").getValue(String.class);
+                            mStationDb.addValueEventListener(new ValueEventListener() {
+
+                                public void onDataChange(DataSnapshot stationSnapshot) {
+
+                                    for (long k = 0; k < stationSnapshot.getChildrenCount(); k++){
+                                        if (iDate.equals(currentDate)
+                                                && iEmail.equals(stationSnapshot.child(Long.toString(k)).child("email").getValue(String.class))
+                                                && stationSnapshot.child(Long.toString(k)).child("Nume").getValue(String.class).equals(intentName) )
+                                        {
+                                            for (int j = 0; j < list.size(); j++) {
+                                                if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
+                                                    list.get(j).put(SECOND_COLUMN, mCarId);
+                                                    list.get(j).put(THIRD_COLUMN, "");
+                                                }
+                                            }
+                                        }
+                                    }
+                                    DriverScheduleAdapter adapter=new DriverScheduleAdapter(DriverScheduleActivity.this, list);
+                                    listView.setAdapter(adapter);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+        };
+
+
+        selectDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerBuilder builder = new DatePickerBuilder(DriverScheduleActivity.this, dateListener)
+                        .pickerType(CalendarView.ONE_DAY_PICKER)
+                        .headerColor(R.color.colorPrimary)
+                        .selectionColor(R.color.colorPrimary);
+
+                DatePicker datePicker = builder.build();
+                datePicker.show();
+            }
+        });
+
+    }
+
+    private String getConvertedMonth(String month){
+        if (month.equals("Jan")){
+            month = "01";
+        }
+        if (month.equals("Feb")){
+            month = "02";
+        }
+        if (month.equals("Mar")){
+            month = "03";
+        }
+        if (month.equals("Apr")){
+            month = "04";
+        }
+        if (month.equals("May")){
+            month = "05";
+        }
+        if (month.equals("Jun")){
+            month = "06";
+        }
+        if (month.equals("Jul")){
+            month = "07";
+        }
+        if (month.equals("Aug")){
+            month = "08";
+        }
+        if (month.equals("Sep")){
+            month = "09";
+        }
+        if (month.equals("Oct")){
+            month = "10";
+        }
+        if (month.equals("Nov")){
+            month = "11";
+        }
+        if (month.equals("Dec")){
+            month = "12";
+        }
+        return month;
     }
 
     private void populateList() {
