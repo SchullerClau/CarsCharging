@@ -2,11 +2,12 @@ package com.example.schuller.carscharging.stations;
 
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,11 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalDateTime;
-import java.time.MonthDay;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,6 +36,7 @@ import java.util.List;
 public class StationsScheduleActivity extends AppCompatActivity {
 
     private ArrayList<HashMap<String, String>> list;
+    private ArrayList<HashMap<String, String>> listBlackList;
     public static final String FIRST_COLUMN="First";
     public static final String SECOND_COLUMN="Second";
     public static final String THIRD_COLUMN="Third";
@@ -46,6 +45,7 @@ public class StationsScheduleActivity extends AppCompatActivity {
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Schedule");
+    final DatabaseReference stationRefDb = database.getReference("Stations");
 
 
     private Button selectDay;
@@ -88,6 +88,15 @@ public class StationsScheduleActivity extends AppCompatActivity {
                 }
                 StationScheduleAdapter adapter=new StationScheduleAdapter(StationsScheduleActivity.this, list);
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        long viewId = view.getId();
+                        if (viewId == R.id.stationScheduleButton){
+                            addToBlacklist(list.get(position).get(SECOND_COLUMN));
+                        }
+                    }
+                });
             }
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -135,6 +144,16 @@ public class StationsScheduleActivity extends AppCompatActivity {
                         }
                         StationScheduleAdapter adapter=new StationScheduleAdapter(StationsScheduleActivity.this, list);
                         listView.setAdapter(adapter);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                long viewId = view.getId();
+                                if (viewId == R.id.stationScheduleButton){
+                                    addToBlacklist(list.get(position).get(SECOND_COLUMN));
+                                }
+
+                            }
+                        });
                     }
                     public void onCancelled(DatabaseError databaseError) {
                     }
@@ -156,6 +175,51 @@ public class StationsScheduleActivity extends AppCompatActivity {
                 datePicker.show();
             }
         });
+    }
+
+    public void addToBlacklist(String carId){
+        Intent intent = getIntent();
+        String intentEmail = intent.getStringExtra("stationEmail");
+        stationRefDb.child("help").getRef().push().setValue("salut");
+        stationRefDb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot blacklistSnapshot) {
+                for (long u=0; u < blacklistSnapshot.getChildrenCount()-1; u++){
+                    if (blacklistSnapshot.child(Long.toString(u)).child("email").getValue(String.class).equals(intentEmail)){
+                        long finalU = u;
+                        blacklistSnapshot.child(Long.toString(u)).child("Blacklist").getRef().addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot blackSnapshot) {
+                                boolean ok = true;
+                                for (long i=0; i<blackSnapshot.getChildrenCount(); i++){
+                                    if(blackSnapshot.child(Long.toString(i)).getValue(String.class).equals(carId)) {
+                                        ok = false;
+                                    }
+                                }
+                                if (ok){
+                                    addValueToBlackList((int)blackSnapshot.getChildrenCount(), carId, Long.toString(finalU));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        }
+                    }
+                }
+
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void addValueToBlackList(int id, String carNo, String positionReference){
+        if (!carNo.equals("")){
+            stationRefDb.child(positionReference).child("Blacklist").child(String.valueOf(id)).setValue(carNo);
+        }
     }
 
     private String getConvertedMonth(String month){

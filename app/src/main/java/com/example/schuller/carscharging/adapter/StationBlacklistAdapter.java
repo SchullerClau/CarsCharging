@@ -5,13 +5,18 @@ import java.util.HashMap;
 
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.schuller.carscharging.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 public class StationBlacklistAdapter extends BaseAdapter{
 
@@ -19,6 +24,9 @@ public class StationBlacklistAdapter extends BaseAdapter{
     Activity activity;
     public static final String FIRST_COLUMN="First";
     public static final String SECOND_COLUMN="Second";
+
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference mDb = database.getReference("Stations");
 
     public StationBlacklistAdapter(Activity activity, ArrayList<HashMap<String, String>> list){
         super();
@@ -62,7 +70,7 @@ public class StationBlacklistAdapter extends BaseAdapter{
             convertView=inflater.inflate(R.layout.activity_station_blacklist_row, null);
             holder=new ViewHolder();
 
-            holder.txtFirst=(TextView) convertView.findViewById(R.id.blacklistCarId);
+            holder.txtFirst = (TextView) convertView.findViewById(R.id.blacklistCarId);
             holder.txtSecond = (TextView) convertView.findViewById(R.id.blacklistButton);
 
             convertView.setTag(holder);
@@ -74,6 +82,14 @@ public class StationBlacklistAdapter extends BaseAdapter{
         HashMap<String, String> map=list.get(position);
         holder.txtFirst.setText(map.get(FIRST_COLUMN));
         holder.txtSecond.setText(map.get(SECOND_COLUMN));
+
+        holder.txtSecond.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                ((ListView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
+            }
+        });
 
         return convertView;
     }

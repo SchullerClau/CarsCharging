@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.schuller.carscharging.adapter.StationBlacklistAdapter;
@@ -15,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,7 +48,7 @@ public class StationsBlacklistActivity extends AppCompatActivity {
 
         mDb.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (long i=0; i<dataSnapshot.getChildrenCount(); i++) {
+                for (long i=0; i<dataSnapshot.getChildrenCount()-1; i++) {
                     if (dataSnapshot.child(Long.toString(i)).child("email").getValue(String.class).equals(intentEmail)) {
                         mBlackDb = database.getReference("Stations/" + Long.toString(i) + "/Blacklist");
 
@@ -58,8 +61,19 @@ public class StationsBlacklistActivity extends AppCompatActivity {
                                     hashmap.put(SECOND_COLUMN, "Remove");
                                     list.add(hashmap);
                                 }
-                                StationBlacklistAdapter adapter=new StationBlacklistAdapter(StationsBlacklistActivity.this, list);
+
+                                StationBlacklistAdapter adapter = new StationBlacklistAdapter(StationsBlacklistActivity.this, list);
                                 listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        long viewId = view.getId();
+                                        if (viewId == R.id.blacklistButton){
+                                            blackSnapshot.child(Long.toString(position)).getRef().removeValue();
+                                        }
+
+                                    }
+                                });
                             }
                             public void onCancelled(@NonNull DatabaseError databaseError) {
                             }

@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Sign in successful", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, MapActivity.class);
+                            intent.putExtra("driverEmail", mEmail.getText().toString());
                             startActivity(intent);
                         } else {
                         }

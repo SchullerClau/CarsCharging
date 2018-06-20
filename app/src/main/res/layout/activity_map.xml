@@ -10,11 +10,14 @@
     <!--android:id="@+id/driver_map_toolbar"-->
     <!--layout="@layout/toolbar_layout" />-->
 
+    <include layout="@layout/toolbar_layout" />
+
     <include
         android:id="@+id/driverMapId"
         layout="@layout/fragment_driver_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
     <RelativeLayout
         android:id="@+id/relLayout1"
@@ -58,15 +61,15 @@
         android:layout_marginTop="12dp"
         android:scaleType="centerCrop" />
 
-    <ImageView
-        android:id="@+id/place_info"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="12dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_info"
-        app:layout_constraintTop_toBottomOf="@id/relLayout1" />
+    <!--<ImageView-->
+        <!--android:id="@+id/place_info"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginLeft="12dp"-->
+        <!--android:layout_marginTop="12dp"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@drawable/ic_info"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/relLayout1" />-->
 
     <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--&lt;!&ndash;xmlns:tools="http://schemas.android.com/tools"&ndash;&gt;-->
