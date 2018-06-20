@@ -18,12 +18,23 @@
             tools:ignore="ContentDescription" />
     </android.support.v7.widget.Toolbar>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:textColor="@color/colorBlue"
+        android:textSize="14sp"
+        android:id="@+id/back_to_login"
+        android:text= "@string/back_to_login"
+        />
+
+
     <EditText
         android:id="@+id/createName"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="@color/colorPrimary"
         android:hint="Name"
         android:inputType="textNoSuggestions" />

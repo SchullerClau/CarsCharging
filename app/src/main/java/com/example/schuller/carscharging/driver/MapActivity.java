@@ -86,6 +86,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //widgets
     private AutoCompleteTextView mSearchText;
     private ImageView mGps;
+    private ImageView mPlaceInfo;
 
     //vars
     private Boolean mLocationPermissionsGranted = false;
@@ -103,6 +104,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         mSearchText = findViewById(R.id.input_search);
         mGps = findViewById(R.id.ic_gps);
+        mPlaceInfo = findViewById(R.id.place_info);
+
+        mPlaceInfo.setOnClickListener(view -> {
+            Intent intent = new Intent (MapActivity.this, StationActivity.class);
+            startActivity(intent);
+        });
 
         getLocationPermission();
 
