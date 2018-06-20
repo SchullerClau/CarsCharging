@@ -244,7 +244,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void addMarker() {
         mDb.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (long i = 0; i<dataSnapshot.getChildrenCount(); i++){
+                for (long i = 0; i<dataSnapshot.getChildrenCount()-1; i++){
                     String getName = dataSnapshot.child(Long.toString(i)).child("Nume").getValue(String.class);
                     String getLat = dataSnapshot.child(Long.toString(i)).child("Latitudine").getValue(String.class);
                     String getLng = dataSnapshot.child(Long.toString(i)).child("Longitudine").getValue(String.class);
@@ -259,8 +259,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void onInfoWindowClick(Marker marker) {
+        Intent getintent = getIntent();
+        String intentEmail = getintent.getStringExtra("driverEmail");
+
         Intent intent = new Intent(MapActivity.this, DriverScheduleActivity.class);
         intent.putExtra("stationName", marker.getTitle());
+        intent.putExtra("driverName", intentEmail);
         startActivity(intent);
     }
 

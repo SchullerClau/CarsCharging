@@ -2,10 +2,12 @@ package com.example.schuller.carscharging.driver;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -15,6 +17,7 @@ import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.example.schuller.carscharging.R;
 import com.example.schuller.carscharging.adapter.DriverScheduleAdapter;
+import com.example.schuller.carscharging.model.ScheduleList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +51,7 @@ public class DriverScheduleActivity extends AppCompatActivity{
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Schedule");
     final DatabaseReference mStationDb = database.getReference("Stations");
+    final DatabaseReference mDriverDb = database.getReference("Driver");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +61,10 @@ public class DriverScheduleActivity extends AppCompatActivity{
         String currentDate = selectedDay + "-" + selectedMonth + "-" +selectedYear;
 
         Intent intent = getIntent();
-        String intentName = intent.getStringExtra("stationName");
-        Log.d("@@@@@@@@@",intentName);
+        String stationName = intent.getStringExtra("stationName");
+        String driverName = intent.getStringExtra("driverName");
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_schedule);
 
@@ -78,10 +84,10 @@ public class DriverScheduleActivity extends AppCompatActivity{
 
                         public void onDataChange(DataSnapshot stationSnapshot) {
 
-                                for (long k = 0; k < stationSnapshot.getChildrenCount(); k++){
+                                for (long k = 0; k < stationSnapshot.getChildrenCount()-1; k++){
                                     if (iDate.equals(currentDate)
                                             && iEmail.equals(stationSnapshot.child(Long.toString(k)).child("email").getValue(String.class))
-                                            && stationSnapshot.child(Long.toString(k)).child("Nume").getValue(String.class).equals(intentName) )
+                                            && stationSnapshot.child(Long.toString(k)).child("Nume").getValue(String.class).equals(stationName) )
                                            {
                                         for (int j = 0; j < list.size(); j++) {
                                             if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
@@ -93,7 +99,17 @@ public class DriverScheduleActivity extends AppCompatActivity{
                                 }
                             DriverScheduleAdapter adapter=new DriverScheduleAdapter(DriverScheduleActivity.this, list);
                             listView.setAdapter(adapter);
-                            }
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    long viewId = view.getId();
+                                    if (viewId == R.id.driverScheduleButton && list.get(position).get(SECOND_COLUMN).equals("")){
+                                        addSchedule(stationName, iDate, list.get(position).get(FIRST_COLUMN), driverName, dataSnapshot.getChildrenCount());
+                                    }
+
+                                }
+                            });
+                        }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -138,7 +154,7 @@ public class DriverScheduleActivity extends AppCompatActivity{
                                     for (long k = 0; k < stationSnapshot.getChildrenCount(); k++){
                                         if (iDate.equals(currentDate)
                                                 && iEmail.equals(stationSnapshot.child(Long.toString(k)).child("email").getValue(String.class))
-                                                && stationSnapshot.child(Long.toString(k)).child("Nume").getValue(String.class).equals(intentName) )
+                                                && stationSnapshot.child(Long.toString(k)).child("Nume").getValue(String.class).equals(stationName) )
                                         {
                                             for (int j = 0; j < list.size(); j++) {
                                                 if (list.get(j).get(FIRST_COLUMN).equals(mHour)) {
@@ -150,6 +166,16 @@ public class DriverScheduleActivity extends AppCompatActivity{
                                     }
                                     DriverScheduleAdapter adapter=new DriverScheduleAdapter(DriverScheduleActivity.this, list);
                                     listView.setAdapter(adapter);
+                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            long viewId = view.getId();
+                                            if (viewId == R.id.driverScheduleButton && list.get(position).get(SECOND_COLUMN).equals("")){
+                                                addSchedule(stationName, iDate, list.get(position).get(FIRST_COLUMN), driverName, dataSnapshot.getChildrenCount());
+                                            }
+
+                                        }
+                                    });
                                 }
 
                                 @Override
@@ -177,6 +203,43 @@ public class DriverScheduleActivity extends AppCompatActivity{
 
                 DatePicker datePicker = builder.build();
                 datePicker.show();
+            }
+        });
+
+    }
+
+    private void addSchedule(String iEmail, String iDate, String iHour, String iDriver, Long position){
+
+        String driverEmail = iDriver.substring(0, iDriver.length()-4)+",com";
+        mDriverDb.child("help").getRef().push().setValue("salut");
+        mDriverDb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String driverCarId = dataSnapshot.child(driverEmail).child("carId").getValue(String.class);
+                mStationDb.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (int u=0; u<dataSnapshot.getChildrenCount();u++)
+                            if(iEmail.equals(dataSnapshot.child(Long.toString(u)).child("Nume").getValue(String.class))) {
+
+                                String stationEmail = dataSnapshot.child(Long.toString(u)).child("email").getValue(String.class);
+                                ScheduleList schedule = new ScheduleList(iDate, driverCarId, stationEmail, iHour);
+
+                                mDb.child(Long.toString(position)).setValue(schedule);
+                            }
+                        }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 

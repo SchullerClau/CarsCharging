@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.schuller.carscharging.R;
@@ -77,6 +78,14 @@ public class StationScheduleAdapter extends BaseAdapter{
         holder.txtFirst.setText(map.get(FIRST_COLUMN));
         holder.txtSecond.setText(map.get(SECOND_COLUMN));
         holder.txtThird.setText(map.get(THIRD_COLUMN));
+
+        holder.txtThird.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                ((ListView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
+            }
+        });
 
         return convertView;
     }
