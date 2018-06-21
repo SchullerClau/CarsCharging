@@ -104,7 +104,7 @@ public class DriverScheduleActivity extends AppCompatActivity{
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     long viewId = view.getId();
                                     if (viewId == R.id.driverScheduleButton && list.get(position).get(SECOND_COLUMN).equals("")){
-                                        addSchedule(stationName, iDate, list.get(position).get(FIRST_COLUMN), driverName, dataSnapshot.getChildrenCount());
+                                        addSchedule(stationName, currentDate, list.get(position).get(FIRST_COLUMN), driverName, dataSnapshot.getChildrenCount());
                                     }
 
                                 }
@@ -171,7 +171,7 @@ public class DriverScheduleActivity extends AppCompatActivity{
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                             long viewId = view.getId();
                                             if (viewId == R.id.driverScheduleButton && list.get(position).get(SECOND_COLUMN).equals("")){
-                                                addSchedule(stationName, iDate, list.get(position).get(FIRST_COLUMN), driverName, dataSnapshot.getChildrenCount());
+                                                addSchedule(stationName, currentDate, list.get(position).get(FIRST_COLUMN), driverName, dataSnapshot.getChildrenCount());
                                             }
 
                                         }
@@ -211,7 +211,6 @@ public class DriverScheduleActivity extends AppCompatActivity{
     private void addSchedule(String iEmail, String iDate, String iHour, String iDriver, Long position){
 
         String driverEmail = iDriver.substring(0, iDriver.length()-4)+",com";
-        mDriverDb.child("help").getRef().push().setValue("salut");
         mDriverDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

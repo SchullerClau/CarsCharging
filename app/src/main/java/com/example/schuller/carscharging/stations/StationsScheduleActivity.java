@@ -180,7 +180,7 @@ public class StationsScheduleActivity extends AppCompatActivity {
     public void addToBlacklist(String carId){
         Intent intent = getIntent();
         String intentEmail = intent.getStringExtra("stationEmail");
-        stationRefDb.child("help").getRef().push().setValue("salut");
+//        stationRefDb.child("help").getRef().push().setValue("salut");
         stationRefDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot blacklistSnapshot) {

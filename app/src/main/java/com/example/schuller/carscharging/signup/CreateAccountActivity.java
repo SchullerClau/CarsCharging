@@ -31,7 +31,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText mPhoneNumber;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    final DatabaseReference table_driver = database.getReference("Drivers");
+    final DatabaseReference table_driver = database.getReference("Driver");
 
 
     @Override
@@ -82,7 +82,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                             }
                         });
 
-                        Intent intent = new Intent(CreateAccountActivity.this, StationActivity.class);
+                        Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
                         startActivity(intent);
 
                     } else {

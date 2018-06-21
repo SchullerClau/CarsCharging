@@ -23,6 +23,7 @@ import org.w3c.dom.Text;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class StationsBlacklistActivity extends AppCompatActivity {
@@ -72,6 +73,16 @@ public class StationsBlacklistActivity extends AppCompatActivity {
                                         long viewId = view.getId();
                                         if (viewId == R.id.blacklistButton){
                                             blackSnapshot.child(Long.toString(position)).getRef().removeValue();
+                                            for (long u = position; u<blackSnapshot.getChildrenCount()-1; u++){
+                                                blackSnapshot.child(Long.toString(u)).getRef().setValue(blackSnapshot.child(Long.toString(u+1)).getValue(String.class));
+                                                blackSnapshot.child(Long.toString(u+1)).getRef().removeValue();
+//                                                HashMap<String, Object> result = new HashMap<>();
+//
+//                                                result.put(Long.toString(u-1), blackSnapshot.child(Long.toString(u)).getValue(String.class));
+//
+//                                                blackSnapshot.child(Long.toString(u)).getRef().updateChildren(result);
+
+                                            }
                                         }
 
                                     }
