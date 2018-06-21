@@ -9,6 +9,10 @@
         layout="@layout/toolbar_layout" />
 
     <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp"
         android:id="@+id/recycler_stations"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schuller.carscharging.BuildConfig;
@@ -22,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
+    private TextView mBackToLogin;
     private EditText mCreateName;
     private EditText mCreateEmail;
     private EditText mCreatePassword;
@@ -29,7 +31,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText mPhoneNumber;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    final DatabaseReference table_driver = database.getReference("Drivers");
+    final DatabaseReference table_driver = database.getReference("Driver");
 
 
     @Override
@@ -42,11 +44,17 @@ public class CreateAccountActivity extends AppCompatActivity {
         mCreatePassword = findViewById(R.id.createPassword);
         mCreateCarID = findViewById(R.id.createCarID);
         mPhoneNumber = findViewById(R.id.phoneNumber);
+        mBackToLogin = findViewById(R.id.back_to_login);
 
         Button mCreateAccount = findViewById(R.id.createAccountButton);
 
         mCreateAccount.setOnClickListener(view -> {
             signUp();
+        });
+
+        mBackToLogin.setOnClickListener(view ->{
+            Intent intent = new Intent (CreateAccountActivity.this, LoginActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -74,7 +82,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                             }
                         });
 
-                        Intent intent = new Intent(CreateAccountActivity.this, StationActivity.class);
+                        Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
                         startActivity(intent);
 
                     } else {

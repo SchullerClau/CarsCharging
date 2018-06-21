@@ -10,4 +10,6 @@
     <string name="m_create_carId">Numarul masinii este obligatoriu</string>
     <string name="google_maps_API_key">AIzaSyDIO1cE31gK-wn7Y7WWOvwe2F-4AW9lYz8</string>
     <string name="go_to_blacklist"><u>Go to blacklist -></u></string>
+    <string name="back_to_login"> <u>Back to login</u></string>
+    <string name="back_to_schedule_station"><u>Back to appointments</u></string>
 </resources>

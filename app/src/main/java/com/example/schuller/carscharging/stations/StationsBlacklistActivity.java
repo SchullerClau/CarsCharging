@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.schuller.carscharging.adapter.StationBlacklistAdapter;
 import com.example.schuller.carscharging.R;
@@ -17,9 +18,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class StationsBlacklistActivity extends AppCompatActivity {
@@ -27,7 +31,6 @@ public class StationsBlacklistActivity extends AppCompatActivity {
     private ArrayList<HashMap<String, String>> list;
     public static final String FIRST_COLUMN="First";
     public static final String SECOND_COLUMN="Second";
-
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference mDb = database.getReference("Stations");
@@ -70,6 +73,16 @@ public class StationsBlacklistActivity extends AppCompatActivity {
                                         long viewId = view.getId();
                                         if (viewId == R.id.blacklistButton){
                                             blackSnapshot.child(Long.toString(position)).getRef().removeValue();
+                                            for (long u = position; u<blackSnapshot.getChildrenCount()-1; u++){
+                                                blackSnapshot.child(Long.toString(u)).getRef().setValue(blackSnapshot.child(Long.toString(u+1)).getValue(String.class));
+                                                blackSnapshot.child(Long.toString(u+1)).getRef().removeValue();
+//                                                HashMap<String, Object> result = new HashMap<>();
+//
+//                                                result.put(Long.toString(u-1), blackSnapshot.child(Long.toString(u)).getValue(String.class));
+//
+//                                                blackSnapshot.child(Long.toString(u)).getRef().updateChildren(result);
+
+                                            }
                                         }
 
                                     }
